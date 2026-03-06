@@ -25,3 +25,12 @@ class Item(BaseModel):
 @app.get("/get-item/{item_id}")
 def get_item(item_id: Annotated[int, Path(title="The ID of the item to get")]):
     return fake_db_items[item_id]
+
+
+@app.put("/update-item/{item_id}")
+def update_item(
+    item_id: Annotated[int, Path(title="The ID of the item to get")],
+    item: Item,
+):
+    item[item_id] = item
+    return item[item_id]
