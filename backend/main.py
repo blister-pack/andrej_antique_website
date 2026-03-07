@@ -19,7 +19,7 @@ class Item(BaseModel):
     description: str | None = None
     price: float
     negotiable: bool
-    # TODO complete w relevant categories
+    # TODO complete w relevant categories - {date_created};
 
 
 @app.get("/get-item/{item_id}")
@@ -32,6 +32,7 @@ def update_item(
     item_id: Annotated[int, Path(title="The ID of the item to get")],
     item: Item,
 ):
-    item[item_id] = item
-    return item[item_id]
-    # TODO fix update method
+    update_item_helper = item
+    fake_db_items[item_id] = update_item_helper
+    return update_item_helper
+
