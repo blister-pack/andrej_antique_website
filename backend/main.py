@@ -27,6 +27,12 @@ def get_item(item_id: Annotated[int, Path(title="The ID of the item to get")]):
     return fake_db_items[item_id]
 
 
+@app.post("/create-item/{item_id}")
+def post_item(item_id: int, item: Item):
+    if item_id in fake_db_items:
+        pass
+    
+
 @app.put("/update-item/{item_id}")
 def update_item(
     item_id: Annotated[int, Path(title="The ID of the item to get")],
