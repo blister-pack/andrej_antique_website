@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Path
 from typing import Annotated
-from pydantic import BaseModel
+from schemas import Item
 
 app = FastAPI()
 
@@ -15,20 +15,9 @@ fake_db_items = {
 number_of_items = 1
 
 
-class Item(BaseModel):
-    title: str
-    description: str = "womp womp"
-    price: float = 0.0
-    negotiable: bool = False
-    # TODO complete w relevant categories - {date_created};
-
-
 @app.get("/item-list/")
 def get_all_items():
     return fake_db_items
-
-
-# TODO fix the damn broken list
 
 
 @app.get("/get-item/{item_id}")
