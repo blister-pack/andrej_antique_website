@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path, HTTPException
 from typing import Annotated
 from schemas import Item
 
@@ -45,3 +45,17 @@ def update_item(
     update_item_helper = item
     fake_db_items[item_id] = update_item_helper
     return update_item_helper
+
+
+@app.delete("/delete-item/{item_id}")
+def delete_item(
+    item_id: Annotated[int, Path(title="The ID of the item to get")],
+):
+    # if not fake_db_items[item_id]:
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail="Item does not exist.",
+    #     )
+    del fake_db_items[item_id]
+    return {"Message": "Item deleted."}
+#TODO fix mistake when deleting non-existing item
