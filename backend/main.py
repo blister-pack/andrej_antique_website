@@ -17,8 +17,8 @@ fake_db_items = {
 class Item(BaseModel):
     title: str
     description: str | None = None
-    price: float
-    negotiable: bool
+    price: float = 0.0
+    negotiable: bool = False
     # TODO complete w relevant categories - {date_created};
 
 
