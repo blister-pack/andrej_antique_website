@@ -24,9 +24,7 @@ class Item(BaseModel):
 
 
 @app.get("/item-list/")
-def get_all_items(
-    item_list: Annotated[dict, Path(title="A list of all inserted items")],
-):
+def get_all_items():
     return fake_db_items
 
 
