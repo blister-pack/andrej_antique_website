@@ -22,7 +22,7 @@ class Item(BaseModel):
     # TODO complete w relevant categories - {date_created};
 
 
-@app.get("/item-list")
+@app.get("/item-list/")
 def get_all_items(item_list: Annotated[dict, Path(title="A list of all inserted items")]):
     return fake_db_items
 
@@ -31,7 +31,7 @@ def get_item(item_id: Annotated[int, Path(title="The ID of the item to get")]):
     return fake_db_items[item_id]
 
 
-@app.post("/create-item/{item_id}")
+@app.post("/create-item/")
 def post_item(item_id: int, item: Item):
     if item_id in fake_db_items:
         pass
