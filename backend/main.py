@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Path, HTTPException
 from typing import Annotated
-from schemas import Item
+from backend.schemas import Item
 
 app = FastAPI()
 
