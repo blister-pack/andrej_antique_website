@@ -51,11 +51,10 @@ def update_item(
 def delete_item(
     item_id: Annotated[int, Path(title="The ID of the item to get")],
 ):
-    # if not fake_db_items[item_id]:
-    #     raise HTTPException(
-    #         status_code=400,
-    #         detail="Item does not exist.",
-    #     )
+    if item_id not in fake_db_items.keys():
+        raise HTTPException(
+            status_code=404,
+            detail="Item does not exist.",
+        )
     del fake_db_items[item_id]
     return {"Message": "Item deleted."}
-#TODO fix mistake when deleting non-existing item
