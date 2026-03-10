@@ -33,7 +33,7 @@ def post_item(item: Item):
     and never overwritten or reused.
     """
     item_id = number_of_items + 1
-    fake_db_items[item_id] = item
+    fake_db_items[item_id] = item.model_dump()
     return fake_db_items[item_id]
 
 
@@ -43,7 +43,7 @@ def update_item(
     item: Item,
 ):
     update_item_helper = item
-    fake_db_items[item_id] = update_item_helper
+    fake_db_items[item_id] = update_item_helper.model_dump()
     return update_item_helper
 
 
