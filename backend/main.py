@@ -1,6 +1,6 @@
-from fastapi import Depends, FastAPI, Path, HTTPException
+from fastapi import Depends, FastAPI, Path, HTTPException, Query
 from typing import Annotated
-from sqlmodel import Session
+from sqlmodel import Session, select
 from backend.db import create_db_and_tables, get_session
 from backend.schemas import Item
 from contextlib import asynccontextmanager
@@ -26,9 +26,14 @@ async def lifespan(app: FastAPI):
     yield
 
 
-@app.get("/item-list/")
-def get_all_items(session: SessionDep, offset: int = 0):
-    return fake_db_items
+@app.get("/item-list/", response_model=list[Item])
+def get_all_items(
+    session: SessionDep,
+    offset: int = 0,
+    limit: Annotated[int, Query(le=100)] = 100,
+):
+    item_list = session.exec(select(Item).offset(offset).limit(limit)).all()
+    return item_list
 
 
 @app.get("/get-item/{item_id}")
