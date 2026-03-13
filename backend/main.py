@@ -1,7 +1,12 @@
-from fastapi import FastAPI, Path, HTTPException
+from fastapi import Depends, FastAPI, Path, HTTPException
 from typing import Annotated
+from sqlmodel import Session
+from backend.db import create_db_and_tables, get_session
 from backend.schemas import Item
+from contextlib import asynccontextmanager
 
+
+SessionDep = Annotated[Session, Depends(get_session)]
 app = FastAPI()
 
 fake_db_items = {
@@ -15,8 +20,14 @@ fake_db_items = {
 number_of_items = 1
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+
 @app.get("/item-list/")
-def get_all_items():
+def get_all_items(session: SessionDep, offset: int = 0):
     return fake_db_items
 
 
