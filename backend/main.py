@@ -36,13 +36,24 @@ def get_all_items(
     return item_list
 
 
-@app.get("/get-item/{item_id}")
-def get_item(item_id: Annotated[int, Path(title="The ID of the item to get")]):
-    return fake_db_items[item_id]
+@app.get("/get-item/{item_id}", response_model=Item)
+def get_item(
+    session: SessionDep,
+    item_id: Annotated[int, Path(title="The ID of the item to get")],
+):
+    item = session.get(Item, item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    session.delete(item)
+    session.commit()
+    return {"Message": f"Item {item.title} successfully deleted."}
 
 
 @app.post("/create-item/")
-def post_item(item: Item):
+def post_item(
+    session: SessionDep,
+    item: Item,
+):
     """
     The function posts a new item to the fake DB. The item_id is self-generated
     and based on the number of items already created. This ensures every ID is
