@@ -47,21 +47,18 @@ def get_item(
     session.delete(item)
     session.commit()
     return {"Message": f"Item {item.title} successfully deleted."}
+    # TODO check if response_model correct here
 
 
-@app.post("/create-item/")
+@app.post("/create-item/", response_model=Item)
 def post_item(
     session: SessionDep,
     item: Item,
 ):
-    """
-    The function posts a new item to the fake DB. The item_id is self-generated
-    and based on the number of items already created. This ensures every ID is
-    and never overwritten or reused.
-    """
-    item_id = number_of_items + 1
-    fake_db_items[item_id] = item.model_dump()
-    return fake_db_items[item_id]
+    session.add(item)
+    session.commit()
+    session.refresh(item)
+    return {"Message": f"Item {item.title} successfully created."}
 
 
 @app.put("/update-item/{item_id}")
