@@ -41,12 +41,8 @@ def get_item(
     session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
 ):
-    item = session.get(Item, item_id)
-    if not item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    session.delete(item)
-    session.commit()
-    return {"Message": f"Item {item.title} successfully deleted."}
+    pass
+
     # TODO check if response_model correct here
 
 
@@ -63,6 +59,7 @@ def post_item(
 
 @app.put("/update-item/{item_id}")
 def update_item(
+    session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
     item: Item,
 ):
@@ -73,12 +70,12 @@ def update_item(
 
 @app.delete("/delete-item/{item_id}")
 def delete_item(
+    session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
 ):
-    if item_id not in fake_db_items.keys():
-        raise HTTPException(
-            status_code=404,
-            detail="Item does not exist.",
-        )
-    del fake_db_items[item_id]
-    return {"Message": "Item deleted."}
+    item = session.get(Item, item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    session.delete(item)
+    session.commit()
+    return {"Message": f"Item {item.title} successfully deleted."}
