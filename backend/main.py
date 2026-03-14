@@ -41,9 +41,10 @@ def get_item(
     session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
 ):
-    pass
-
-    # TODO check if response_model correct here
+    item = session.get(Item, item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Selected item does not exist.")
+    return item
 
 
 @app.post("/create-item/", response_model=Item)
@@ -68,7 +69,7 @@ def update_item(
     return update_item_helper
 
 
-@app.delete("/delete-item/{item_id}")
+@app.delete("/delete-item/{item_id}", response_model=dict)
 def delete_item(
     session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
