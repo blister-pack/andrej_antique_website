@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-@app.get("/item-list/", response_model=list[Item])
+@app.get("/get-item-list/", response_model=list[Item])
 def get_all_items(
     session: SessionDep,
     offset: int = 0,
