@@ -62,11 +62,13 @@ def post_item(
 def update_item(
     session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
-    item: Item,
+    updated_item: Item,
 ):
-    update_item_helper = item
-    fake_db_items[item_id] = update_item_helper.model_dump()
-    return update_item_helper
+    item = session.get(Item, item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    item = updated_item
+    return {"Message": f"Item with id number {item_id} was successfully updated."}
 
 
 @app.delete("/delete-item/{item_id}", response_model=dict)
