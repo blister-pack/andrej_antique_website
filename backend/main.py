@@ -17,16 +17,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-fake_db_items = {
-    1: {
-        "title": "Grand Clock",
-        "description": "A big ol' Clock",
-        "price": 250,
-        "negotiable": False,
-    },
-}
-number_of_items = 1
-
 
 @app.get("/get-item-list/", response_model=list[Item])
 def get_all_items(
