@@ -7,7 +7,15 @@ from contextlib import asynccontextmanager
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
-app = FastAPI()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 fake_db_items = {
     1: {
@@ -18,12 +26,6 @@ fake_db_items = {
     },
 }
 number_of_items = 1
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    create_db_and_tables()
-    yield
 
 
 @app.get("/get-item-list/", response_model=list[Item])
