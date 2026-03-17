@@ -12,3 +12,18 @@ class ItemBase(SQLModel):
 
 class Item(ItemBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+
+
+class ItemPublic(ItemBase):
+    id: int
+
+
+class ItemCreate(ItemBase):
+    pass
+
+
+class ItemUpdate:
+    title: str | None = None
+    description: str | None = None
+    price: float | None = None
+    negotiable: bool | None = None

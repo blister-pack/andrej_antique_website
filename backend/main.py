@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI, Path, HTTPException, Query
 from typing import Annotated
 from sqlmodel import Session, select
 from backend.db import create_db_and_tables, get_session
-from backend.schemas import Item
+from backend.schemas import Item, ItemCreate, ItemPublic
 from contextlib import asynccontextmanager
 
 
@@ -39,11 +39,13 @@ def get_item(
     return item
 
 
-@app.post("/create-item/", response_model=Item)
+@app.post("/create-item/", response_model=ItemPublic)
 def post_item(
     session: SessionDep,
-    item: Item,
+    item: ItemCreate,
 ):
+    db_item: Item.model_validate(item)
+
     session.add(item)
     session.commit()
     session.refresh(item)
