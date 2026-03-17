@@ -44,12 +44,14 @@ def post_item(
     session: SessionDep,
     item: ItemCreate,
 ):
-    db_item: Item.model_validate(item)
-
-    session.add(item)
+    db_item = Item.model_validate(item)
+    session.add(db_item)
     session.commit()
-    session.refresh(item)
-    return {"Message": f"Item {item.title} successfully created."}
+    session.refresh(db_item)
+    return (
+        db_item,
+        {"Message": f"Item {db_item.title} successfully created."},
+    )
 
 
 @app.put("/update-item/{item_id}")
