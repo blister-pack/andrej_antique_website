@@ -68,14 +68,14 @@ def update_item(
     return db_item
 
 
-@app.delete("/delete-item/{item_id}", response_model=dict)
+@app.delete("/delete-item/{item_id}")
 def delete_item(
     session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
 ):
-    item = session.get(Item, item_id)
-    if not item:
+    db_item = session.get(Item, item_id)
+    if not db_item:
         raise HTTPException(status_code=404, detail="Item not found")
-    session.delete(item)
+    session.delete(db_item)
     session.commit()
-    return {"Message": f"Item {item.title} successfully deleted."}
+    return {"Message": f"Item {db_item.title} successfully deleted."}
