@@ -48,10 +48,9 @@ def post_item(
     session.add(db_item)
     session.commit()
     session.refresh(db_item)
-    return (
-        db_item,
-        {"Message": f"Item {db_item.title} successfully created."},
-    )
+    return db_item
+    
+    
 
 
 @app.put("/update-item/{item_id}")
