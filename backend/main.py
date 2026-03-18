@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI, Path, HTTPException, Query
 from typing import Annotated
 from sqlmodel import Session, select
 from backend.db import create_db_and_tables, get_session
-from backend.schemas import Item, ItemCreate, ItemPublic
+from backend.schemas import Item, ItemCreate, ItemPublic, ItemUpdate
 from contextlib import asynccontextmanager
 
 
@@ -51,17 +51,21 @@ def post_item(
     return db_item
 
 
-@app.patch("/update-item/{item_id}")
+@app.patch("/update-item/{item_id}", response_model=ItemPublic)
 def update_item(
     session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
-    updated_item: Item,
+    item: ItemUpdate,
 ):
-    item = session.get(Item, item_id)
-    if not item:
+    db_item = session.get(Item, item_id)
+    if not db_item:
         raise HTTPException(status_code=404, detail="Item not found")
-    item = updated_item
-    return {"Message": f"Item with id number {item_id} was successfully updated."}
+    item_data = item.model_dump(exclude_unset=True)
+    db_item.sqlmodel_update(item_data)
+    session.add(db_item)
+    session.commit()
+    session.refresh(db_item)
+    return db_item
 
 
 @app.delete("/delete-item/{item_id}", response_model=dict)

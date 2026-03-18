@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, Field
 
 
+# --------------------------------Item Classes-------------------------#
 class ItemBase(SQLModel):
     title: str = Field(default="Item name", index=True)
     description: str | None = Field(default="No description available.")
@@ -22,8 +23,11 @@ class ItemCreate(ItemBase):
     pass
 
 
-class ItemUpdate:
+class ItemUpdate(SQLModel):
     title: str | None = None
     description: str | None = None
     price: float | None = None
     negotiable: bool | None = None
+
+
+# --------------------------------Item Classes-------------------------#
