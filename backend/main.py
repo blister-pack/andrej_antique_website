@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-@app.get("/get-item-list/", response_model=list[Item])
+@app.get("/get-item-list/", response_model=list[ItemPublic])
 def get_all_items(
     session: SessionDep,
     offset: int = 0,
@@ -28,7 +28,7 @@ def get_all_items(
     return item_list
 
 
-@app.get("/get-item/{item_id}", response_model=Item)
+@app.get("/get-item/{item_id}", response_model=ItemPublic)
 def get_item(
     session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
@@ -49,11 +49,9 @@ def post_item(
     session.commit()
     session.refresh(db_item)
     return db_item
-    
-    
 
 
-@app.put("/update-item/{item_id}")
+@app.patch("/update-item/{item_id}")
 def update_item(
     session: SessionDep,
     item_id: Annotated[int, Path(title="The ID of the item to get")],
